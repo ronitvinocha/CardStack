@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -13,9 +14,14 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.feelr.myapplication.ui.main.MainFragment
 import kotlinx.android.synthetic.main.main_activity.*
- private const val NUM_PAGES = 5
+import java.util.*
+import kotlin.properties.Delegates
+
+private const val NUM_PAGES = 5
 class MainActivity : AppCompatActivity() {
     private lateinit var viewpager: ViewPager2
+     var position by Delegates.notNull<Int>()
+    var starttime by Delegates.notNull<Long>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
@@ -31,6 +37,33 @@ class MainActivity : AppCompatActivity() {
         viewpager.adapter = pagerAdapter
         viewpager.setPageTransformer(Slidepagetransformer())
         viewpager.offscreenPageLimit=2
+        position=0
+        viewpager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+              override fun onPageScrollStateChanged(state: Int) {
+                  println("onpagescrollstatechanged"+state)
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                println("onpagescrolled"+position)
+            }
+
+            override fun onPageSelected(position: Int) {
+                println("onpageselected"+position)
+                if(this@MainActivity.position!=position)
+                {
+                    if((Date().time-starttime)/1000-60>0)
+                    {
+                          Toast.makeText(this@MainActivity, (((Date().time-starttime)/60000)).toString()+" min",Toast.LENGTH_SHORT).show()
+                    }
+                    else
+                    {
+                          Toast.makeText(this@MainActivity, ((Date().time-starttime)/1000).toString()+" sec",Toast.LENGTH_SHORT).show()
+                    }
+                }
+                this@MainActivity.position=position
+                this@MainActivity.starttime=Date().time
+            }
+        })
 //        for(i in 0..viewpager.adapter!!.itemCount-1)
 //        {
 //            setcardsstackoninitiate(i,viewpager.get(i))
