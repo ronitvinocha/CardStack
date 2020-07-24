@@ -2,6 +2,7 @@ package com.feelr.myapplication
 import android.graphics.drawable.TransitionDrawable
 import android.opengl.Visibility
 import android.view.View
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager2.widget.ViewPager2
 import com.feelr.myapplication.R
@@ -17,12 +18,16 @@ class Slidepagetransformer :ViewPager2.PageTransformer {
             var childview=view.findViewById<ConstraintLayout>(R.id.main)
                 transition= childview.background as TransitionDrawable?
                 transition?.startTransition(200)
+                var text=view.findViewById<TextView>(R.id.editText)
+                text.visibility=View.VISIBLE
         }
         else
         {
             var childview=view.findViewById<ConstraintLayout>(R.id.main)
                 transition= childview.background as TransitionDrawable?
                 transition?.resetTransition()
+                var text=view.findViewById<TextView>(R.id.editText)
+                text.visibility=View.GONE
         }
         if (position >= 0) {
             view.setScaleX(0.9f - 0.1f * position);
